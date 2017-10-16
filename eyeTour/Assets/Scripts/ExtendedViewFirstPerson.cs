@@ -12,8 +12,8 @@ using UnityEngine.UI;
 /// </summary>
 public class ExtendedViewFirstPerson : ExtendedViewBase
 {
-	[Tooltip("Optional reference to a crosshair Image. If supplied the crosshair will be moved according to the character forward direction rather than stay at the center of screen.")]
-	public Image OptionalCrosshair;
+    [Tooltip("Optional reference to a crosshair Image. If supplied the crosshair will be moved according to the character forward direction rather than stay at the center of screen.")]
+    public Image OptionalCrosshair;
 
 	private Camera _usedCamera;
 
