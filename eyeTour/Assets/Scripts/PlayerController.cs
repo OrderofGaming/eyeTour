@@ -8,7 +8,12 @@ public class PlayerController : MonoBehaviour
     public float speed = 3.0f;
     public float turnspeed = 150.0f;
     private float curTurnSpeed = 0.0f;
-    public float movespeed = 0.25f;
+    public float moveSpeed = 0.25f;
+
+    private Vector3 targetPosition;
+    public float smoothFactor = 5.0f;
+
+
 
     private Rigidbody rb;
     private void Start()
@@ -39,7 +44,7 @@ public class PlayerController : MonoBehaviour
 
 
         transform.Rotate(0, x, 0);
-        transform.Translate(0, 0, -z);
+        transform.Translate(0, 0, z);
 
         Vector2 userGaze = TobiiAPI.GetGazePoint().Screen;
         smoothedView = Vector2.Lerp(smoothedView, userGaze, 0.5f); //Smooths gaze points 
@@ -73,9 +78,17 @@ public class PlayerController : MonoBehaviour
 
         if (userGaze.y <= Screen.height / 4)
         {
-            transform.Translate(0, 0, movespeed * Time.deltaTime);
+            //targetPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.25f);
+
+            //Vector3 lerpMovement = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * smoothFactor);
+
+            //transform.Translate(lerpMovement);
+                
+            transform.Translate(-Vector3.forward * Time.deltaTime, Space.Self); // Best implementation So far
+
+            //transform.Translate((Vector3.SmoothDamp(transform.position, targetPosition, )))
         }
- 
+        
 
         //Debug.Log("test");
         //Debug.Log(smoothedView);
