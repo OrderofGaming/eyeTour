@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 3.0f;
     public float turnspeed = 150.0f;
     private float curTurnSpeed = 0.0f;
+    public float movespeed = 0.25f;
 
     private Rigidbody rb;
     private void Start()
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     }*/
 
     Vector2 smoothedView;
+
     //private float desiredRotation = 90.0f;
     //public float damping = 10.0f;
 
@@ -46,9 +48,9 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log(userGaze); //Outputs where the user is looking in x,y px to console
 
-        if (userGaze.x <= Screen.width / 8 || userGaze.x >= Screen.width)
+        if (userGaze.x <= Screen.width / 8 || userGaze.x >= Screen.width - 200) //Check for left most and right most boundary of screen
         {
-            curTurnSpeed += turnspeed / 5.0f;
+            curTurnSpeed += turnspeed / 7.0f;
 
             if (curTurnSpeed > turnspeed)
                 curTurnSpeed = turnspeed;
@@ -68,6 +70,12 @@ public class PlayerController : MonoBehaviour
         }
         else
             curTurnSpeed = 0.0f;
+
+        if (userGaze.y <= Screen.height / 4)
+        {
+            transform.Translate(0, 0, movespeed * Time.deltaTime);
+        }
+ 
 
         //Debug.Log("test");
         //Debug.Log(smoothedView);
