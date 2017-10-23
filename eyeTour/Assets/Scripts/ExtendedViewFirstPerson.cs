@@ -66,7 +66,7 @@ public class ExtendedViewFirstPerson : ExtendedViewBase
 		_crosshairScreenPosition = _usedCamera.WorldToScreenPoint(crosshairWorldPosition);
 		UpdateCrosshair();
 
-		StartCoroutine(ResetCameraLocal(localRotation, transform));
+        StartCoroutine(ResetCameraLocal(localRotation, transform));
 	}
 
 	private void UpdateCrosshair()

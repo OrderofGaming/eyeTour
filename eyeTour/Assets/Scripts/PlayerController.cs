@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     }*/
 
     Vector2 smoothedView;
-
+    Vector2 userGaze;
     //private float desiredRotation = 90.0f;
     //public float damping = 10.0f;
 
@@ -40,20 +40,24 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         var x = Input.GetAxis("Horizontal") * turnspeed / 60.0f;
-        var z = -Input.GetAxis("Vertical") * speed / 60.0f;
+        var z = Input.GetAxis("Vertical") * speed / 60.0f;
 
 
         transform.Rotate(0, x, 0);
         transform.Translate(0, 0, z);
 
-        Vector2 userGaze = TobiiAPI.GetGazePoint().Screen;
+        if (TobiiAPI.GetUserPresence() == UserPresence.Present)
+            userGaze = TobiiAPI.GetGazePoint().Screen;
+        else if (Input.GetMouseButton(2)) // if the middle mouse button is held down, use the mouse to simulate the eye tracker
+            userGaze = Input.mousePosition;
+        else
+            userGaze = new Vector2(Screen.width/2.0f, Screen.height / 2.0f);
         smoothedView = Vector2.Lerp(smoothedView, userGaze, 0.5f); //Smooths gaze points 
 
         curTurnSpeed = 0.0f;
-
         Debug.Log(userGaze); //Outputs where the user is looking in x,y px to console
 
-        if (userGaze.x <= Screen.width / 8 || userGaze.x >= Screen.width - 200) //Check for left most and right most boundary of screen
+        if (userGaze.x <= Screen.width / 8.0f || userGaze.x >= Screen.width - 200) //Check for left most and right most boundary of screen
         {
             curTurnSpeed += turnspeed / 7.0f;
 
@@ -76,7 +80,7 @@ public class PlayerController : MonoBehaviour
         else
             curTurnSpeed = 0.0f;
 
-        if (userGaze.y <= Screen.height / 4)
+        if (userGaze.y <= Screen.height / 4.0f)
         {
             //targetPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.25f);
 
@@ -84,7 +88,7 @@ public class PlayerController : MonoBehaviour
 
             //transform.Translate(lerpMovement);
                 
-            transform.Translate(-Vector3.forward * Time.deltaTime, Space.Self); // Best implementation So far
+            transform.Translate(Vector3.forward * Time.deltaTime, Space.Self); // Best implementation So far
 
             //transform.Translate((Vector3.SmoothDamp(transform.position, targetPosition, )))
         }
