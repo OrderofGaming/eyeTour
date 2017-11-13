@@ -11,7 +11,9 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 0.25f;
 
     private Vector3 targetPosition;
+
     public float smoothFactor = 5.0f;
+    public float acclerationForward = 0.001f;
 
 
 
@@ -46,12 +48,14 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(0, x, 0);
         transform.Translate(0, 0, z);
 
-        if (TobiiAPI.GetUserPresence() == UserPresence.Present)
+        if (TobiiAPI.GetUserPresence() == UserPresence.NotPresent)
+            userGaze = new Vector2(Screen.width / 2.0f, Screen.height / 2.0f);
+
+        else if (TobiiAPI.GetUserPresence() == UserPresence.Present)
             userGaze = TobiiAPI.GetGazePoint().Screen;
         else if (Input.GetMouseButton(2)) // if the middle mouse button is held down, use the mouse to simulate the eye tracker
             userGaze = Input.mousePosition;
-        else
-            userGaze = new Vector2(Screen.width/2.0f, Screen.height / 2.0f);
+        
         smoothedView = Vector2.Lerp(smoothedView, userGaze, 0.5f); //Smooths gaze points 
 
         curTurnSpeed = 0.0f;
@@ -81,7 +85,7 @@ public class PlayerController : MonoBehaviour
             curTurnSpeed = 0.0f;
 
         if (userGaze.y <= Screen.height / 4.0f)
-        {
+        {   // Comments are attempts to smooth translation
             //targetPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.25f);
 
             //Vector3 lerpMovement = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * smoothFactor);
