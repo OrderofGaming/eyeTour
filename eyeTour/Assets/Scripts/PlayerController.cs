@@ -8,16 +8,17 @@ public class PlayerController : MonoBehaviour
     public float speed = 3.0f;
     public float turnspeed = 150.0f;
     private float curTurnSpeed = 0.0f;
-    public float moveSpeed = 0.25f;
+    public float moveSpeed = 0.15f;
 
     private Vector3 targetPosition;
 
-    public float smoothFactor = 5.0f;
+    public float smoothFactor = 3.0f;
     public float acclerationForward = 0.001f;
 
-
+    public Camera PlayerCam;
 
     private Rigidbody rb;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -59,7 +60,7 @@ public class PlayerController : MonoBehaviour
         smoothedView = Vector2.Lerp(smoothedView, userGaze, 0.5f); //Smooths gaze points 
 
         curTurnSpeed = 0.0f;
-        Debug.Log(userGaze); //Outputs where the user is looking in x,y px to console
+        //Debug.Log(userGaze); //Outputs where the user is looking in x,y px to console
 
         if (userGaze.x <= Screen.width / 8.0f || userGaze.x >= Screen.width - 200) //Check for left most and right most boundary of screen
         {
@@ -94,9 +95,19 @@ public class PlayerController : MonoBehaviour
                 
             transform.Translate(Vector3.forward * Time.deltaTime, Space.Self); // Best implementation So far
 
+            //if (PlayerCam.transform.rotation.x <= 0.0f)
+            
+            PlayerCam.transform.Rotate(.25f, 0.0f, 0.0f);
+
             //transform.Translate((Vector3.SmoothDamp(transform.position, targetPosition, )))
         }
         
+        if (userGaze.y >= Screen.height / 4.0f && userGaze.y <= Screen.height) //Rotates camera upwards when user looks upwards
+        {
+            //PlayerCam.Rotate(0.0f, 0.25f, 0.0f);
+            //if (PlayerCam.transform.rotation.x >= 0.0f)
+            PlayerCam.transform.Rotate(-.25f, 0.0f, 0.0f);
+        }
 
         //Debug.Log("test");
         //Debug.Log(smoothedView);
